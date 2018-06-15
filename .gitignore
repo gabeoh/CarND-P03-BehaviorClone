@@ -11,8 +11,9 @@ __pycache__/
 .ipynb_checkpoints
 
 # Input Data Files
-data
 models
 
 # Project Output
-results
+data
+runs
+archive
