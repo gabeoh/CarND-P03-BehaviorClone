@@ -11,7 +11,7 @@ FLAGS = flags.FLAGS
 flags.DEFINE_string('data_dir', \
     './data/trial04/,./data/trial09/,./data/trial10/,./data/trial11/,./data/trial12/,./data/trial13/', \
     "The directory location of training data files.")
-flags.DEFINE_integer('epochs', 5, "The number of epochs.")
+flags.DEFINE_integer('epochs', 6, "The number of epochs.")
 flags.DEFINE_integer('batch_size', 128, "The batch size.")
 flags.DEFINE_float('valid_split', 0.2, "The batch size.")
 flags.DEFINE_float('drop_rate', 0.5, "The batch size.")
@@ -99,18 +99,22 @@ train_logs, valid_logs = train_test_split(drive_logs, test_size=VALID_SPLIT)
 
 
 #%% Print dataset summary an visualize an image
+nb_total_samples = len(drive_logs)
 nb_train, nb_valid = len(train_logs), len(valid_logs)
-img_index_rand = np.random.randint(0, nb_train)
-img_rand_filepath = train_logs[img_index_rand][0]
+img_index_rand = np.random.randint(0, nb_total_samples)
+img_file_info = drive_logs[img_index_rand]
+img_rand_filepath = img_file_info[0]
+img_flip = img_file_info[2]
 img_rand = cv2.imread(img_rand_filepath)
 img_shape = img_rand.shape
 
 print_section_header('Dataset Summary')
 print("Image Shape: {}".format(img_shape))
+print("Number of Total Samples: {}".format(nb_total_samples))
 print("Number of Train Samples: {}".format(nb_train))
 print("Number of Validation Samples: {}".format(nb_valid))
 
-def visualize_image(img, img_filepath=None):
+def visualize_image(img, flip=False, img_filepath=None):
     """
     Visualize a given 'img' with cropping line overlaid.
 
@@ -126,13 +130,22 @@ def visualize_image(img, img_filepath=None):
     img[CROP_TOP - 1:CROP_TOP + 1, :, 0] = 255.0
     img[bottom - 1:bottom + 1, :, 0] = 255.0
 
+    outfile = 'image_out'
     if (img_filepath):
         plt.title(img_filepath)
-    plt.imshow(img)
-    plt.show()
-    #plt.savefig('imagefilename.png')
+        outfile = img_filepath.split('/')[-1].replace('.jpg', '')
 
-visualize_image(img_rand, img_rand_filepath)
+    # Flip image when indicated
+    if (flip):
+        img = np.fliplr(img)
+        outfile += '_flipped'
+    outfile += '.jpg'
+
+    plt.imshow(img)
+    # plt.savefig(outfile)
+    plt.show()
+
+visualize_image(img_rand, img_flip, img_rand_filepath)
 
 
 #%% Batch data generator
