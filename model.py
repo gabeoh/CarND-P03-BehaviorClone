@@ -13,8 +13,8 @@ flags.DEFINE_string('data_dir', \
     "The directory location of training data files.")
 flags.DEFINE_integer('epochs', 6, "The number of epochs.")
 flags.DEFINE_integer('batch_size', 128, "The batch size.")
-flags.DEFINE_float('valid_split', 0.2, "The batch size.")
-flags.DEFINE_float('drop_rate', 0.5, "The batch size.")
+flags.DEFINE_float('valid_split', 0.2, "The ratio of validation dataset.")
+flags.DEFINE_float('drop_rate', 0.5, "The drop rate on dropout layers.")
 
 def print_section_header(title):
     """
@@ -145,7 +145,7 @@ def visualize_image(img, flip=False, img_filepath=None):
     # plt.savefig(outfile)
     plt.show()
 
-visualize_image(img_rand, img_flip, img_rand_filepath)
+# visualize_image(img_rand, img_flip, img_rand_filepath)
 
 
 #%% Batch data generator
